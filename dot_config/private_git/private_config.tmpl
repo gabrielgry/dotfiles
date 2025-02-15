@@ -1,0 +1,13 @@
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = /var/opt/1Password/op-ssh-sign
+
+[commit]
+  gpgsign = true
+
+[user]
+  signingKey = {{ onepasswordRead "op://Developer/Github SSH Auth/public key" }}
+  name = {{ onepasswordRead "op://Developer/Github/Security/name" }}
+  email = {{ onepasswordRead "op://Developer/Github/username" }}
