@@ -1,0 +1,43 @@
+FROM quay.io/toolbx/arch-toolbox:latest
+
+# Configure aur-install helper
+ARG AUR_USER=aur
+ARG AUR_HELPER=yay
+
+COPY ./scripts /tmp/scripts
+
+RUN pacman -Syu --noconfirm \
+  && pacman -S --noconfirm \
+    bc \
+    inetutils \
+    base-devel \
+    git \
+    chezmoi \
+    neovim \
+    lazygit \
+    nodejs \
+    python \
+    zsh \
+    fzf \
+    eza \
+    zoxide \
+  && pacman -Scc --noconfirm
+
+# Install AUR helper and add a user for it
+# https://github.com/greyltc-org/docker-archlinux-aur/blob/master/add-aur.sh
+RUN bash /tmp/scripts/add-aur.sh "${AUR_USER}" "${AUR_HELPER}"
+
+# Switch to the AUR build user so that the GPG key is imported in the correct home directory
+USER "${AUR_USER}"
+
+# Import the 1Password signing key into the AUR user's GPG keyring
+RUN gpg --batch --keyserver keyserver.ubuntu.com --receive-keys 3FEF9748469ADBE15DA7CA80AC2D62742012EA22 && sleep 1 && gpgconf --kill all && sleep 2
+
+# Switch back to root for install packages
+USER root
+
+# Install 1password-cli using the AUR helper (runs as the non-root user)
+RUN aur-install 1password-cli
+
+# Clean
+RUN rm -rf /tmp/scripts
