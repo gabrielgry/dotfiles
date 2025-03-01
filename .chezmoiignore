@@ -1,14 +1,8 @@
 {{/* Files to ignore when inside a Distrobox container */}}
-{{- if env "CONTAINER_ID" }}
+{{ if env "CONTAINER_ID" }}
 Distrobox
 Vault
-.ssh
-
 .config/gtk-3.0
 .config/1Password
-.config/git
-{{- end }}
+{{ end }}
 
-{{/* Files to ignore when inside a Distrobox host */}}
-{{- if and (not (env "CONTAINER_ID")) (lookPath "distrobox") }}
-{{- end }}
