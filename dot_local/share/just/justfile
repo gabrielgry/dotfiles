@@ -20,11 +20,10 @@ devbox-create cache='true' root='false' replace='false' rm-home='false':
   $run_sudo podman build -t devbox:latest $BUILD_CONTEXT $cache_flag
 
   if [[ '{{replace}}' == 'true' ]]; then
-    rm_home_flag=''
-    if [[ '{{rm-home}}' == true ]]; then
-      rm_home_flag='--rm-home'
+    distrobox-rm devbox -f $root_flag
+    if [[ '{{rm-home}}' == true ]] && [[ -d ~/.local/share/distrobox/home/devbox ]]; then
+      rm -rf ~/.local/share/distrobox/home/devbox
     fi
-    distrobox-rm devbox -f $rm_home_flag $root_flag
   fi
 
   onepassword_token="$(op read 'op://Personal/2mh7blmiovoj3deyh7cfbdydo4/credential')"
