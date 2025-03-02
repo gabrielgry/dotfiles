@@ -14,11 +14,13 @@ RUN pacman -Syu --noconfirm \
     git \
     chezmoi \
     neovim \
+    ripgrep \
     lazygit \
+    fzf \
+    fd \
     nodejs \
     python \
     zsh \
-    fzf \
     eza \
     zoxide \
   && pacman -Scc --noconfirm

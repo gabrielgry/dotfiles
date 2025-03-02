@@ -45,7 +45,7 @@ devbox-create cache='true' root='false' replace='false' rm-home='false':
 [no-cd]
 devbox-enter root='false':
   #!/usr/bin/env bash
-  set -euoxv pipefail
+  set -euo pipefail
 
   root_flag=''
   if [[ '{{root}}' == 'true' ]]; then

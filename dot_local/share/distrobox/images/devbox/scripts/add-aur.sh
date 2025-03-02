@@ -20,10 +20,10 @@ useradd "${AUR_USER}" --system --shell /usr/bin/nologin --create-home --home-dir
 passwd --lock "${AUR_USER}"
 
 # give the aur user passwordless sudo powers for pacman
-echo "${AUR_USER} ALL=(ALL) NOPASSWD: /usr/bin/pacman" > "/etc/sudoers.d/allow_${AUR_USER}_to_pacman"
+echo "${AUR_USER} ALL=(ALL) NOPASSWD: /usr/bin/pacman" >"/etc/sudoers.d/allow_${AUR_USER}_to_pacman"
 
 # let root cd with sudo
-echo "root ALL=(ALL) CWD=* ALL" > /etc/sudoers.d/permissive_root_Chdir_Spec
+echo "root ALL=(ALL) CWD=* ALL" >/etc/sudoers.d/permissive_root_Chdir_Spec
 
 # build config setup
 sudo -u ${AUR_USER} -D~ bash -c 'mkdir -p .config/pacman'
@@ -94,10 +94,9 @@ sudo rm -rf "${NEW_PKGDEST}"/*
 EOF
 chmod +x /bin/aur-install
 
-if test "${HELPER}" = yay || test "${HELPER}" = paru
-then
+if test "${HELPER}" = yay || test "${HELPER}" = paru; then
   /bin/aur-install ${HELPER}
 
   echo "Packages from the AUR can now be installed like this:"
-  echo "aur-install package-number-one package-number-two" 
+  echo "aur-install package-number-one package-number-two"
 fi
