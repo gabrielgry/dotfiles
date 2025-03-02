@@ -1,0 +1,69 @@
+devbox-create cache='true' root='false' replace='false' rm-home='false':
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  BUILD_CONTEXT=~/.local/share/distrobox/images/devbox
+  DOTFILES_REPO=https://github.com/gabrielgry/dotfiles.git
+
+  cache_flag=''
+  if [[ '{{cache}}' != 'true' ]]; then
+    cache_flag='--no-cache'
+  fi
+
+  root_flag=''
+  run_sudo=''
+  if [[ '{{root}}' == 'true' ]]; then
+    root_flag='--root'
+    run_sudo='sudo'
+  fi
+
+  $run_sudo podman build -t devbox:latest $BUILD_CONTEXT $cache_flag
+
+  if [[ '{{replace}}' == 'true' ]]; then
+    rm_home_flag=''
+    if [[ '{{rm-home}}' == true ]]; then
+      rm_home_flag='--rm-home'
+    fi
+    distrobox-rm devbox -f $rm_home_flag $root_flag
+  fi
+
+  onepassword_token="$(op read 'op://Personal/2mh7blmiovoj3deyh7cfbdydo4/credential')"
+  if [[ -z "${onepassword_token}" ]]; then
+    exit 1
+  fi
+
+  distrobox-create \
+    --name devbox \
+    --image localhost/devbox:latest \
+    --home ~/.local/share/distrobox/home/devbox \
+    --additional-flags "--env OP_SERVICE_ACCOUNT_TOKEN='${onepassword_token}'" \
+    --nvidia \
+    $root_flag;
+
+  distrobox-enter devbox -- bash -cv "chezmoi init ${DOTFILES_REPO}; chezmoi apply --force; sudo usermod -s /bin/zsh \$USER"
+
+[no-cd]
+devbox-enter root='false':
+  #!/usr/bin/env bash
+  set -euoxv pipefail
+
+  root_flag=''
+  if [[ '{{root}}' == 'true' ]]; then
+    root_flag='--root'
+  fi
+
+  containers=($(distrobox list | sed 1d | awk -F'|' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//'))
+
+  devbox_exists=false
+  for item in "${containers[@]}"; do
+  if [[ "$item" == "devbox" ]]; then
+    devbox_exists=true
+    break
+  fi
+  done
+
+  if [[ "${devbox_exists}" != 'true' ]]; then
+    just --justfile {{justfile()}} devbox-create true {{root}}
+  fi
+
+  distrobox enter devbox $root_flag
