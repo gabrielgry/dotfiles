@@ -22,6 +22,7 @@ RUN pacman -Syu --noconfirm \
     lazygit \
     fzf \
     fd \
+    wl-clipboard \
     nodejs \
     python \
     zsh \
