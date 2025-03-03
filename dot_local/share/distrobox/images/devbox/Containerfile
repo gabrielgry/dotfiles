@@ -6,6 +6,10 @@ ARG AUR_HELPER=yay
 
 COPY ./scripts /tmp/scripts
 
+# Reserve the most likely UIDs and GIDs to be user by Distrobox setup
+RUN sed -i "s/\(^UID_MIN[[:space:]]\+\)\([0-9]\+\)$/\11100/" /etc/login.defs \
+  && sed -i "s/\(^GID_MIN[[:space:]]\+\)\([0-9]\+\)$/\11100/" /etc/login.defs
+
 RUN pacman -Syu --noconfirm \
   && pacman -S --noconfirm \
     bc \
@@ -43,6 +47,10 @@ RUN aur-install 1password-cli
 
 # Generate missing locale
 RUN sed -i 's@^#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@' /etc/locale.gen && locale-gen
+
+# Revert the UID e GID restriction
+RUN sed -i "s/\(^UID_MIN[[:space:]]\+\)\([0-9]\+\)$/\11000/" /etc/login.defs \
+  && sed -i "s/\(^GID_MIN[[:space:]]\+\)\([0-9]\+\)$/\11000/" /etc/login.defs
 
 # Clean
 RUN rm -rf /tmp/scripts
