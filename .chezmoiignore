@@ -10,6 +10,8 @@ Vault
 
 {{/* Files to ignore when not inside a Distrobox container */}}
 {{ if (not (env "CONTAINER_ID")) }}
+.config/nvim
+.zshrc
 .config/git/op-ssh-sign-wrap.sh
 {{ end }}
 
