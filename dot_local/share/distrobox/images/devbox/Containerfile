@@ -44,7 +44,9 @@ RUN gpg --batch --keyserver keyserver.ubuntu.com --receive-keys 3FEF9748469ADBE1
 USER root
 
 # Install 1password-cli using the AUR helper (runs as the non-root user)
-RUN aur-install 1password-cli
+RUN aur-install \
+  1password-cli \
+  oh-my-posh-bin
 
 # Generate missing locale
 RUN sed -i 's@^#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@' /etc/locale.gen && locale-gen
