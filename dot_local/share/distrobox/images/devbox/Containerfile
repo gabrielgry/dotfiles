@@ -23,6 +23,7 @@ RUN pacman -Syu --noconfirm \
     fzf \
     fd \
     wl-clipboard \
+    trash-cli \
     nodejs \
     python \
     zsh \
