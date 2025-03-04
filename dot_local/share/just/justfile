@@ -39,7 +39,7 @@ devbox-create cache='true' root='false' replace='false' rm-home='false':
     --nvidia \
     $root_flag;
 
-  distrobox-enter devbox -- bash -cv "chezmoi init ${DOTFILES_REPO}; chezmoi apply --force; sudo usermod -s /bin/zsh \$USER"
+  distrobox-enter devbox -- bash -cv "chezmoi init ${DOTFILES_REPO}; chezmoi apply --keep-going; sudo usermod -s /bin/zsh \$USER"
 
 [no-cd]
 devbox-enter root='false':
