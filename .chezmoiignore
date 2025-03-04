@@ -12,6 +12,7 @@ Vault
 {{ if (not (env "CONTAINER_ID")) }}
 .config/nvim
 .zshrc
+.p10k.zsh
 .config/git/op-ssh-sign-wrap.sh
 {{ end }}
 
