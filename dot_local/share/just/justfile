@@ -36,7 +36,7 @@ devbox-create cache='true' root='false' replace='false' rm-home='false':
     --image localhost/devbox:latest \
     --home ~/.local/share/distrobox/home/devbox \
     --additional-flags "--env OP_SERVICE_ACCOUNT_TOKEN='${onepassword_token}'" \
-    --nvidia \
+    --additional-flags "--gpus all" \
     $root_flag;
 
   distrobox-enter devbox -- bash -cv "chezmoi init ${DOTFILES_REPO}; chezmoi apply --keep-going; sudo usermod -s /bin/zsh \$USER"
