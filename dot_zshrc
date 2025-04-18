@@ -86,3 +86,8 @@ alias trash="trash-put"
 # Source powerlevel10k configuration file
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+if [[ -d ~/.cargo/bin ]]; then
+  path+=("$HOME/.cargo/bin")
+fi
+export PATH
