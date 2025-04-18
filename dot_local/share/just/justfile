@@ -37,7 +37,7 @@ devbox-create cache='true' root='false' replace='false' rm-home='false':
     --home ~/.local/share/distrobox/home/devbox \
     --additional-flags "--env OP_SERVICE_ACCOUNT_TOKEN='${onepassword_token}'" \
     --additional-flags "--gpus all" \
-    --init-hooks "ln -s /usr/bin/distrobox-host-exec /usr/local/bin/podman"
+    --init-hooks "if [ ! - f /usr/local/bin/podman ]; then ln -s /usr/bin/distrobox-host-exec /usr/local/bin/podman; fi"
     $root_flag;
 
   distrobox-enter devbox -- bash -cv "chezmoi init ${DOTFILES_REPO}; chezmoi apply --keep-going; sudo usermod -s /bin/zsh \$USER"
