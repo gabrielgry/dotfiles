@@ -1,8 +1,3 @@
-.zshrc
-.p10k.zsh
-.config/nvim
-.config/lazygit
-
 {{/* Files to ignore when inside a Distrobox container */}}
 {{ if env "CONTAINER_ID" }}
 Vault
