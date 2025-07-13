@@ -23,12 +23,12 @@ zinit lucid depth=1 for \
 
 # Initialize fzf and zoxide
 eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd=cd zsh)"
 
 # Source Compinit (must be after plugins that provide completions)
 autoload -Uz compinit && compinit
 
-# Enable vi keybindings
+# Enable vi keybindinglsd -1 --icon always --color alwayss
 bindkey -v
 
 # History
@@ -41,8 +41,16 @@ setopt APPEND_HISTORY HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE H
 setopt BEEP NOMATCH NOTIFY GLOB_DOTS MENU_COMPLETE
 
 # Completion Configuration
-# fzf-tab replaces the standard completion menu. This is a great customization for it.
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd $realpath'
+
+# fzf-tab replaces the standard completion menu.
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# preview directory's content with lsd when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --icon always --color always $realpath'
+# custom fzf flags
+zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
 
 # Environment Variables
 export EDITOR=nvim

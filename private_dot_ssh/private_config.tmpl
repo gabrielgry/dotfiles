@@ -1,6 +1,2 @@
 Host *
-{{- if env "CONTAINER_ID" }}
-	IdentityAgent ${DISTROBOX_HOST_HOME}/.1password/agent.sock
-{{- else }}
 	IdentityAgent ~/.1password/agent.sock
-{{- end }}

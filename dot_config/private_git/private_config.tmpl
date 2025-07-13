@@ -2,11 +2,7 @@
   format = ssh
 
 [gpg "ssh"]
-{{- if env "CONTAINER_ID" }}
-  program = {{ env "HOME" -}}/.config/git/op-ssh-sign-wrap.sh
-{{- else }}
   program = "/opt/1Password/op-ssh-sign"
-{{- end }}
 
 [commit]
   gpgsign = true
