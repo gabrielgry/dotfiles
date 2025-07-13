@@ -1,93 +1,60 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Install Zinit plugin manager
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+[ ! -d $ZINIT_HOME ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Source Compinit
+# Load Powerlevel10k theme
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Essential Plugins
+zinit lucid depth=1 for \
+    jeffreytse/zsh-vi-mode \
+    zsh-users/zsh-syntax-highlighting \
+    zsh-users/zsh-completions \
+    zsh-users/zsh-autosuggestions \
+    Aloxaf/fzf-tab
+
+### --- Configuration ---
+
+# Initialize fzf and zoxide
+eval "$(fzf --zsh)"
+eval "$(zoxide init zsh)"
+
+# Source Compinit (must be after plugins that provide completions)
 autoload -Uz compinit && compinit
 
 # Enable vi keybindings
 bindkey -v
 
-# Install plugins
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
-zinit ice depth=1; zinit light zsh-users/zsh-syntax-highlighting
-zinit ice depth=1; zinit light zsh-users/zsh-completions
-zinit ice depth=1; zinit light zsh-users/zsh-autosuggestions
-zinit ice depth=1; zinit light Aloxaf/fzf-tab
-
-# Sources
-eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
-
 # History
-HISTFILE=~/.zhistfile
+HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt APPEND_HISTORY # Zsh sessions will append their history list to the history file, rather than replace it
-setopt HIST_FIND_NO_DUPS # When searching for history entries in the line editor, do not display duplicates of a line previously found
-setopt HIST_IGNORE_ALL_DUPS #If a new command line being added to the history list duplicates an older one, the older command is removed from the list
-setopt HIST_IGNORE_SPACE # Remove command lines from the history list when the first character on the line is a space
-setopt HIST_REDUCE_BLANKS # Remove superfluous blanks from each command line being added to the history list
-setopt SHARE_HISTORY # This option both imports new commands from the history file, and also causes your typed commands to be appended to the history file
+setopt APPEND_HISTORY HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS SHARE_HISTORY
 
-# Zle options
-setopt BEEP # Beep on error
-setopt NOMATCH # If a pattern for filename generation has no matches, print an error
-setopt NOTIFY # Report the status of background jobs immediately
+# Zle & Other Options
+setopt BEEP NOMATCH NOTIFY GLOB_DOTS MENU_COMPLETE
 
-# Comopletion options
-setopt MENU_COMPLETE # On an ambiguous completion insert the first match immediately
-setopt GLOB_DOTS
+# Completion Configuration
+# fzf-tab replaces the standard completion menu. This is a great customization for it.
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd $realpath'
 
-# Ztyles
-zstyle ':completion:*' add-space true
-zstyle ':completion:*' auto-description 'Specify: %d'
-zstyle ':completion:*' completer _list _oldlist _expand _complete _ignored _match _correct _approximate _prefix
-zstyle ':completion:*' completions 1
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' glob 1
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
-zstyle ':completion:*' matcher-list '+' '+m:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+r:|[._-]=** r:|=**' '+l:|=* r:|=*'
-zstyle ':completion:*' max-errors 3
-zstyle ':completion:*' menu select=0
-zstyle ':completion:*' original true
-zstyle ':completion:*' preserve-prefix '//[^/]##/'
-zstyle ':completion:*' prompt '%e erros found'
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle ':completion:*' substitute 1
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' special-dirs false # Complete . and ..
-zstyle :compinstall filename '/var/home/gabriel/.local/share/distrobox/home/devbox/.zshrc'
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-
-# Environment variables
+# Environment Variables
 export EDITOR=nvim
-export VISUAL=nvim 
+export VISUAL=nvim
+path+=("$HOME/.cargo/bin") # Add cargo to path
 
 # Aliases
-alias ls="eza --icons"
+alias ls="lsd"
+alias la="lsd -la"
 alias trash="trash-put"
 
-# Source powerlevel10k configuration file
+# Source powerlevel10k configuration file.
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if [[ -d ~/.cargo/bin ]]; then
-  path+=("$HOME/.cargo/bin")
-fi
-export PATH
