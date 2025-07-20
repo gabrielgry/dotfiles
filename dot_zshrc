@@ -55,7 +55,11 @@ zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
 # Environment Variables
 export EDITOR=nvim
 export VISUAL=nvim
-path+=("$HOME/.cargo/bin") # Add cargo to path
+path+=(
+  "$HOME/bin"
+  "$HOME/.local/bin"
+  "$HOME/.cargo/bin"
+) # Add cargo to path
 
 # Aliases
 alias ls="lsd"
