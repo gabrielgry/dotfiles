@@ -50,7 +50,7 @@ zstyle ':completion:*' menu no
 # preview directory's content with lsd when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --icon always --color always $realpath'
 # custom fzf flags
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2
 
 # Environment Variables
 export EDITOR=nvim
