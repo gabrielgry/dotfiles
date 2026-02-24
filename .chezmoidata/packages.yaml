@@ -5,3 +5,4 @@ packages:
       - zoxide
       - atuin
       - trash-cli
+      - starship
