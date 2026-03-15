@@ -1,3 +1,15 @@
+# User specific environment
+# Ensure the path array contains only unique values (prevents duplicate entries)
+typeset -U path
+path=(
+	"$HOME/.local/bin"
+	"$HOME/bin"
+  	"$HOME/.cargo/bin"
+	$path
+)
+export PATH
+
+
 # Install Zinit plugin manager
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -43,14 +55,14 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --icon always --color always
 # custom fzf flags
 zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2
 
-# Environment Variables
-path+=(
-  "$HOME/bin"
-  "$HOME/.local/bin"
-  "$HOME/.cargo/bin"
-) # Add cargo to path
-
 # Aliases
 alias ls="lsd"
 alias la="lsd -la"
 alias trash="trash-put"
+
+# User specific aliases and functions
+# (N.) is a glob qualifier: N enables nullglob (no error if empty), . matches only regular files
+for rc in ~/.zshrc.d/*(N.); do
+    source "$rc"
+done
+unset rc
