@@ -1,13 +1,10 @@
 [gpg]
   format = ssh
 
-[gpg "ssh"]
-  program = "/opt/1Password/op-ssh-sign"
-
 [commit]
   gpgsign = true
 
 [user]
-  signingKey = {{ onepasswordRead "op://Developer/Github SSH Auth/public key" }}
-  name = {{ onepasswordRead "op://Developer/Github/Security/name" }}
-  email = {{ onepasswordRead "op://Developer/Github/username" }}
+  signingKey = {{ (bitwarden "item" "7924ebfa-d6cd-476e-8441-b40f01820dea").sshKey.publicKey }}
+  name = {{ (index (bitwarden "item" "7924ebfa-d6cd-476e-8441-b40f01820dea").fields 0).value }}
+  email = {{ (index (bitwarden "item" "7924ebfa-d6cd-476e-8441-b40f01820dea").fields 1).value }}
